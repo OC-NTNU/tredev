@@ -1,0 +1,9 @@
+Tredev is a wrapper around the Tregex software to support interactive
+development of tree matching patterns interleaved with manual annotation of
+instances.
+
+Dependencies:
+- Python3
+- Numpy
+- Pandas
+

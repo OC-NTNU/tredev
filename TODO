@@ -1,0 +1,5 @@
+- documentation
+- fix problem with duplicates in subprocess calling tregex.sh
+
+
+
