@@ -15,11 +15,10 @@ __all__ = ["Tredev"]
 
 
 help = """
-# t = true              f = false             u = unknown
-# n = next              p = previous
-# a = pattern           r = full tree         s = subtree
-# e = evaluation
-# q = quit 
+# t = true      n = next        a = pattern     e = evaluation
+# f = false     p = previous    s = subtree     q = quit  
+# u = unknown                   r = full tree
+# i = ignore
 """
 
 
@@ -245,6 +244,7 @@ class Tredev(object):
         """
         n = 0
         matches = get_matches(pattern, self.parse_dir)
+        max_n = len(matches) - 1
         
         if unknown_only:
             all_matches = matches.copy()
@@ -298,10 +298,16 @@ class Tredev(object):
                     self.annots.set_negative(node_id, label)
                     print("# set match {}/{} to False".format(n + 1, 
                                                               len(matches)))                
-                    n = min(n + 1, len(matches) - 1)                
+                    n = min(n + 1, max_n)                
+                    break   
+                elif cmd == "i":
+                    self.annots.set_ignore(node_id, label)
+                    print("# set match {}/{} to Ignore".format(n + 1, 
+                                                               len(matches)))                
+                    n = min(n + 1, max_n)                
                     break   
                 elif cmd == "n":
-                    n = min(n + 1, len(matches) - 1)
+                    n = min(n + 1, max_n)
                     break
                 elif cmd == "p":
                     n = max(n - 1, 0)
@@ -313,7 +319,7 @@ class Tredev(object):
                     self.annots.set_positive(node_id, label)
                     print("# set match {}/{} to True".format(n + 1, 
                                                              len(matches)))                 
-                    n = min(n + 1, len(matches) - 1)                
+                    n = min(n + 1, max_n)                
                     break
                 elif cmd == "r":
                     print(self.nodes.get_full_tree(node_id, indent=2))
@@ -322,13 +328,13 @@ class Tredev(object):
                 elif cmd == "u":
                     self.annots.set_unknown(node_id, label)
                     print("# set match {}/{} to Unknown".format(n, len(matches)))                
-                    n = min(n + 1, len(matches) - 1)                
+                    n = min(n + 1, max_n)                
                     break
                 else:
                     print("* Unknown commmand") 
                     print(help)
         else:
-            print("*** pattern has zero matches ***")
+            print("*** pattern has zero (unknown) matches ***")
             
             
     def reannotate(self, name, unknown_only=False):

@@ -8,7 +8,7 @@ from tredev.annots import Annotations
 class Scores(pd.DataFrame):
     
     stats = [ "precision", "recall", "f_score",
-              "positives", "negatives", "unknowns", 
+              "positives", "negatives", "unknowns", "ignores", 
               "true_pos", "false_pos", "true_neg", "false_neg" ]
     
     def __init__(self, *args, **kwargs):
@@ -32,10 +32,12 @@ class Scores(pd.DataFrame):
         is_pos = true_values ==  Annotations.positive
         is_neg = true_values == Annotations.negative
         is_unk = true_values == Annotations.unknown
+        is_ign = true_values == Annotations.ignore
         
         pos = sum(is_pos)
         neg = sum(is_neg)
         unk = sum(is_unk)
+        ign = sum(is_ign)
         
         pred_values = true_values.copy()
         pred_values[:] = Annotations.negative 
@@ -45,6 +47,7 @@ class Scores(pd.DataFrame):
             
         is_match = pred_values == Annotations.positive
             
+        # unknowns and ignored are discounted
         tp = sum(is_pos & is_match)
         fp = sum(is_neg & is_match)
         tn = sum(is_neg & ~is_match)
@@ -54,7 +57,7 @@ class Scores(pd.DataFrame):
         rec = (tp / (tp + fn)) * 100
         f = 2 * ((prec * rec) / (prec + rec))
         
-        scores =  prec, rec, f, pos, neg, unk, tp, fp, tn, fn
+        scores =  prec, rec, f, pos, neg, unk, ign, tp, fp, tn, fn
         
         if name:
             # save score

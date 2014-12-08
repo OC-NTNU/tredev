@@ -71,6 +71,8 @@ class Nodes(pd.DataFrame):
         node_id = 0
         
         for fname in listdir(parse_dir):
+            if fname== ".DS_Store":
+                continue
             fname = join(parse_dir, fname)
             for tree in open(fname, encoding="utf-8"):
                 node_id += cls.NODE_OFFSET

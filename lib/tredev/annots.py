@@ -6,6 +6,7 @@ class Annotations(pd.DataFrame):
     positive = 1
     unknown = 0
     negative = -1
+    ignore = -2
     
     @classmethod
     def from_nodes(cls, nodes, annot_labels):
@@ -18,7 +19,7 @@ class Annotations(pd.DataFrame):
         
     def set_positive(self, node_id, label):
         # Labels are assumed to be mutually exclusive, so if one them is
-        # true, then all the otehrs must be false. 
+        # true, then all the others must be false. 
         # TODO: check for conflicts
         self.loc[node_id] = self.negative
         self.ix[node_id, label] = self.positive
@@ -29,6 +30,9 @@ class Annotations(pd.DataFrame):
     def set_unknown(self, node_id, label):
         self.ix[node_id, label] = self.unknown
         
+    def set_ignore(self, node_id, label):
+        self.ix[node_id, label] = self.ignore
+        
     def is_positive(self, node_id, label):
         return self.ix[node_id, label] == self.positive
         
@@ -37,3 +41,6 @@ class Annotations(pd.DataFrame):
     
     def is_unknown(self, node_id, label):
         return self.ix[node_id, label] == self.unknown
+    
+    def is_ignore(self, node_id, label):
+        return self.ix[node_id, label] == self.ignore
