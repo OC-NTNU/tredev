@@ -11,6 +11,11 @@ from tredev.getch import getch
 from tredev.scores import Scores
 from tredev.patterns import Patterns
 
+try:
+    import nltk
+except ImportError:
+    pass
+
 __all__ = ["Tredev"]
 
 
@@ -18,7 +23,7 @@ help = """
 # t = true      n = next        a = pattern     e = evaluation
 # f = false     p = previous    s = subtree     q = quit  
 # u = unknown                   r = full tree
-# i = ignore
+# i = ignore                    d = draw tree
 """
 
 
@@ -274,8 +279,6 @@ class Tredev(object):
             print(left_context.strip())
             print("==> {} <==".format(substring))
             print(right_context.strip())
-            #print('Sentence: "{}"'.format(sentence))
-            #print('Phrase: "{}"'.format(substring))
             print("Label:", value)        
             
             while True:
@@ -290,6 +293,14 @@ class Tredev(object):
                 
                 if cmd == "a":
                     print(pattern)
+                elif cmd == "d":
+                    lbs = self.nodes.get_full_tree(node_id)
+                    try:
+                        tree = nltk.tree.Tree.fromstring(lbs)
+                    except NameError:
+                        print("* nltk not installed")
+                    else:
+                        tree.draw()
                 elif cmd == "e":
                     scores = self.scores.score_pat(
                         self.annots[label], all_matches)
