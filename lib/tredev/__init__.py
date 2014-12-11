@@ -260,7 +260,25 @@ class Tredev(object):
         
         while matches:
             tree_n, node_n = matches[n]
-            node_id = self.nodes.get_node_id(tree_n, node_n)
+            
+            print(78 * "-")
+            print("Match: {}/{}, Sentence: {}, Node: {}".format(
+                n+1, len(matches), tree_n, node_n))
+            print(78 * "-")
+            
+            node_id = self.nodes.get_node_id(tree_n, node_n)            
+            sentence = self.nodes.get_sentence(node_id)
+            substring = self.nodes.get_substring(node_id)
+            
+            contexts = sentence.split(substring)
+            
+            if len(contexts) != 2:
+                print('* Warning: substring "{}" not (unique) in sentence "{}"'.format(
+                    substring, sentence))
+            else:
+                print(contexts[0].strip())
+                print("==> {} <==".format(substring))
+                print(contexts[1].strip())
             
             if self.annots.is_positive(node_id, label):
                 value = "True"
@@ -268,17 +286,7 @@ class Tredev(object):
                 value = "False"
             else:
                 value = "Unknown"    
-            
-            sentence = self.nodes.get_sentence(node_id)
-            substring = self.nodes.get_substring(node_id)
-            left_context, right_context = sentence.split(substring) 
-            
-            print(78 * "-")
-            print("Match: {}/{}, Sentence: {}, Node: {}".format(
-                n+1, len(matches), tree_n, node_n))
-            print(left_context.strip())
-            print("==> {} <==".format(substring))
-            print(right_context.strip())
+                
             print("Label:", value)        
             
             while True:
