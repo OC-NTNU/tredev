@@ -11,7 +11,10 @@ class Nodes(pd.DataFrame):
     NODE_OFFSET = 10 ** 3
     
     fields = ["node_id", "label", "parent", "children"]
-    Node = namedtuple("Node", fields)        
+    bracket_escapes = { "-LRB-": "(", "-RRB-": ")",
+                        "-RSB-": "[", "-RSB-": "]",
+                        "-LCB-": "{", "-RCB-": "}" }
+    Node = namedtuple("Node", fields)
     
     @classmethod
     def get_node_id(cls, tree_n, node_n):
@@ -58,9 +61,16 @@ class Nodes(pd.DataFrame):
     def get_substring(self, node_id):
         node = self.get_node(node_id)
         if not node.children:
-            return node.label
+            return self.unescape_brackets(node.label)
         
         return " ".join(self.get_substring(child_id) for child_id in node.children)
+    
+    @classmethod    
+    def unescape_brackets(cls, label):
+        """
+        restore bracket escape symbols to original brackets
+        """
+        return cls.bracket_escapes.get(label, label)
     
     def get_sentence(self, node_id):
         return self.get_substring(self.get_root_node_id(node_id))    
