@@ -14,7 +14,7 @@ class Patterns(pd.DataFrame):
         pd.DataFrame.__init__(self, *args, **kwargs)  
     
     def add_pat(self, name, pattern, label, comment=""):
-        if id not in self.index:
+        if name not in self.index:
             self.loc[name] = pattern, label, comment
         else:
             raise ValueError("pattern with name '{}' already exists".format(name))
