@@ -103,6 +103,23 @@ class Tredev(object):
             annotation labels
         """
         nodes = Nodes.from_parses(parse_dir)
+        return cls.from_nodes(parse_dir, labels, nodes)
+    
+    @classmethod    
+    def from_nodes(cls, parse_dir, labels, nodes):
+        """
+        Initialize Tredev data for given parse trees, annotation labels
+        and nodes
+        
+        Parameters
+        ----------
+        parse_dir: str
+            directory with files containing parse trees
+        labels: sequence
+            annotation labels
+        nodes: tredev.nodes.Nodes instance
+            nodes in all parse trees
+        """
         return cls(nodes,
                    Annotations.from_nodes(nodes, labels),
                    Patterns(),
@@ -137,7 +154,7 @@ class Tredev(object):
         self.patterns.to_pickle(path_prefix + "_patterns.pkl")
         self.scores.to_pickle(path_prefix + "_scores.pkl")
         
-    def add(self, name, pattern, label, comment=""):
+    def add(self, name, pattern, label, comment="", score=True):
         """
         Add a new pattern
         
@@ -151,12 +168,15 @@ class Tredev(object):
             targeted label
         comment: str, optional
             optional comment
+        score: bool, opt
+            score pattern upon addition
         """
         if label not in self.annots.columns:
             print('*** invalid label "{}" ***'.format(label))
         else:
             self.patterns.add_pat(name, pattern, label, comment)
-            self._score_pat(pattern, label, name)
+            if score:
+                self._score_pat(pattern, label, name)
         
     def remove(self, name):
         """
