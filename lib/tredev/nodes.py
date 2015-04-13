@@ -1,4 +1,4 @@
-from os import listdir
+from glob import glob
 from os.path import join
 from collections import namedtuple
 
@@ -80,10 +80,9 @@ class Nodes(pd.DataFrame):
         nodes = []
         node_id = 0
         
-        for fname in listdir(parse_dir):
-            if fname== ".DS_Store":
-                continue
-            fname = join(parse_dir, fname)
+        # sort files, because order of files listed may differ 
+        # depending on OS
+        for fname in sorted(glob(join(parse_dir, "*"))):
             for tree in open(fname, encoding="utf-8"):
                 node_id += cls.NODE_OFFSET
                 cls.parse_tree(tree, nodes, node_id)
