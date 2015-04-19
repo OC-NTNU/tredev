@@ -12,7 +12,7 @@ class Nodes(pd.DataFrame):
     
     fields = ["node_id", "label", "parent", "children"]
     bracket_escapes = { "-LRB-": "(", "-RRB-": ")",
-                        "-RSB-": "[", "-RSB-": "]",
+                        "-LSB-": "[", "-RSB-": "]",
                         "-LCB-": "{", "-RCB-": "}" }
     Node = namedtuple("Node", fields)
     
