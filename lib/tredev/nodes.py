@@ -11,9 +11,13 @@ class Nodes(pd.DataFrame):
     NODE_OFFSET = 10 ** 3
     
     fields = ["node_id", "label", "parent", "children"]
+    # brackets escapes are lower-cased in lemmatized parse trees
     bracket_escapes = { "-LRB-": "(", "-RRB-": ")",
                         "-LSB-": "[", "-RSB-": "]",
-                        "-LCB-": "{", "-RCB-": "}" }
+                        "-LCB-": "{", "-RCB-": "}",
+                        "-lrb-": "(", "-rrb-": ")",
+                        "-lsb-": "[", "-rsb-": "]",
+                        "-lcb-": "{", "-rcb-": "}" }
     Node = namedtuple("Node", fields)
     
     @classmethod
